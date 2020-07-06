@@ -8,6 +8,8 @@ import java.util.Properties;
 
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -32,6 +34,8 @@ public class LoginMailSender {
 	private String port;
 
 	private static final String LINK_TEMPLEATE = "<a href=\"%s\">Please click the link to login!</a>";
+
+	private static final Logger logger = LoggerFactory.getLogger("SYSTEM");
 
 	public LoginMailSender(Map<String, String> paraMap) {
 		this.host = paraMap.get("spring.mail.host");
@@ -59,7 +63,7 @@ public class LoginMailSender {
 		helper.setFrom(this.userName);
 		helper.setTo(this.targetAddress);
 		helper.setText(getMessageContent(), true);
-		System.out.println(message.getContent().toString());
+		logger.info("Mail Content: {}", message.getContent());
 		sender.send(message);
 	}
 

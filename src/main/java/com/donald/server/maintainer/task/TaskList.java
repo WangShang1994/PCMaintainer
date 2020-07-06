@@ -4,22 +4,27 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class TaskList {
+
+	private static final Logger logger = LoggerFactory.getLogger("SYSTEM");
 
 	private TaskList() {
 
 	}
 
-	public static List<TaskItem> getAllTaskItems() throws Exception {
+	public static List<TaskItem> getAllTaskItems() {
 
 		List<TaskItem> rsList = new ArrayList<>();
 		ProcessBuilder pb = new ProcessBuilder("tasklist");
-		Process p = pb.start();
 		try {
+			Process p = pb.start();
 			TaskItemHandler handler = new TaskItemHandler();
 			rsList = handler.getResult(p.getInputStream());
 		} catch (Exception e) {
-			throw e;
+			logger.error("Execute tasklist Error!", e);
 		}
 		return rsList;
 	}

@@ -3,12 +3,16 @@ package com.donald.server.maintainer;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class WebController {
+
+	private static final Logger logger = LoggerFactory.getLogger("WebController");
 
 	@GetMapping(value = "/index")
 	public String index() {
@@ -35,10 +39,11 @@ public class WebController {
 		paraMap.put("spring.mail.port", String.valueOf(port));
 		paraMap.put("spring.mail.protocol", protocol);
 		LoginMailSender sender = new LoginMailSender(paraMap);
+		logger.info("Request to send login mail.");
 		try {
 			sender.send();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Execute send login mail error!", e);
 			return "loginPage";
 		}
 

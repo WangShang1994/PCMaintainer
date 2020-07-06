@@ -17,20 +17,24 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 public class TaskItemHandler {
 
-	List<Integer> indexs = new ArrayList<>();
+	private static final Logger logger = LoggerFactory.getLogger("SYSTEM");
+
+	private List<Integer> indexs = new ArrayList<>();
 
 	public List<TaskItem> getResult(final InputStream result) {
 
 		List<TaskItem> rsList = new ArrayList<>();
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(result))) {
 			String line = "";
-
+			StringBuilder sb = new StringBuilder();
 			while ((line = br.readLine()) != null) {
-				System.out.println(line);
+				sb.append(line).append("\r\n");
 				if (isSpliter(line)) {
 					getIndex(line);
 					continue;
@@ -39,8 +43,9 @@ public class TaskItemHandler {
 					rsList.add(buildTaskItem(line));
 				}
 			}
+			logger.info("CMD Execute Result: \r\n {} ", sb);
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error("Build TaskItem Error!", e);
 		}
 
 		return rsList;
